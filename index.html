@@ -13,7 +13,7 @@
   body{font-family:'Segoe UI','Apple SD Gothic Neo','Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:16px;}
   h1{font-size:1.5rem; margin:8px 0 2px;}
   .sub{color:var(--sub); font-size:.85rem; margin-bottom:16px; text-align:center;}
-  .panel{background:var(--card); border-radius:16px; padding:20px; max-width:560px; width:100%; margin-bottom:14px;}
+  .panel{background:var(--card); border-radius:16px; padding:18px; max-width:560px; width:100%; margin-bottom:12px;}
   .panel h2{font-size:1rem; margin-bottom:10px; color:var(--accent);}
   .opts{display:flex; flex-wrap:wrap; gap:8px;}
   .opt{background:#323950; border:2px solid transparent; border-radius:10px; padding:8px 14px; cursor:pointer; font-size:.9rem; user-select:none; transition:.15s;}
@@ -24,66 +24,83 @@
   #game{display:none; width:100%; max-width:560px;}
   .hud{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:.9rem; color:var(--sub);}
   .hud b{color:var(--text);}
-  .prompt{background:var(--card); border-radius:16px; padding:18px; text-align:center; margin-bottom:14px;}
-  .prompt .big{font-size:2.6rem; font-weight:800; letter-spacing:2px;}
-  .prompt .small{color:var(--sub); font-size:.9rem; margin-top:2px;}
+  .prompt{background:var(--card); border-radius:16px; padding:16px; text-align:center; margin-bottom:14px;}
+  .prompt .big{font-size:2.2rem; font-weight:800; letter-spacing:1px;}
+  .prompt .small{color:var(--sub); font-size:.95rem; margin-top:2px;}
   .speak{margin-top:8px; background:#323950; color:var(--text); border:none; border-radius:10px; padding:8px 18px; font-size:1rem; cursor:pointer;}
-  .board{display:grid; gap:10px;}
-  .kcard{aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:2.2rem; font-weight:700; background:var(--card); border-radius:14px; cursor:pointer; transition:.12s; border:2px solid #323950;}
+  .board{display:grid; gap:8px;}
+  .kcard{aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; background:var(--card); border-radius:12px; cursor:pointer; transition:.12s; border:2px solid #323950;}
+  .board.words .kcard{aspect-ratio:unset; min-height:62px; font-size:1.15rem; padding:8px 4px; text-align:center; word-break:keep-all; line-height:1.3;}
+  .board.small .kcard{font-size:1.5rem;}
   .kcard:hover{background:var(--card-hover);}
   .kcard.right{background:#14532d; border-color:var(--good); pointer-events:none;}
   .kcard.wrong{animation:shake .3s; border-color:var(--bad);}
-  .kcard.gone{opacity:0; pointer-events:none; transform:scale(.7);}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
   /* result */
-  #result{display:none; text-align:center;}
+  #result{display:none; text-align:center; width:100%; max-width:560px;}
   #result .panel{padding:28px;}
   .resnum{font-size:2rem; font-weight:800; color:var(--gold);}
   .btnrow{display:flex; gap:10px; justify-content:center; margin-top:16px;}
   .btnrow button{padding:12px 20px; border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer;}
   .again{background:var(--accent); color:#11131c;}
   .back{background:#323950; color:var(--text);}
-  .note{color:var(--sub); font-size:.78rem; margin-top:10px; line-height:1.5;}
+  .note{color:var(--sub); font-size:.78rem; margin-top:10px; line-height:1.5; max-width:560px;}
 </style>
 </head>
 <body>
 <h1>🎴 가나 카루타</h1>
-<div class="sub">소리를 듣고(또는 발음을 보고) 맞는 글자 카드를 최대한 빨리 치세요!</div>
+<div class="sub">소리를 듣고(또는 발음을 보고) 맞는 카드를 최대한 빨리 치세요!</div>
 
 <div id="setup">
-  <div class="panel"><h2>① 글자 종류</h2>
+  <div class="panel"><h2>① 무엇으로 연습할까요?</h2>
+    <div class="opts" id="kindOpts">
+      <div class="opt sel" data-v="char">글자 카루타</div>
+      <div class="opt" data-v="word">단어 카루타 (2~3글자+)</div>
+    </div>
+  </div>
+  <div class="panel"><h2>② 글자 종류</h2>
     <div class="opts" id="scriptOpts">
       <div class="opt sel" data-v="hira">히라가나</div>
       <div class="opt" data-v="kata">카타카나</div>
       <div class="opt" data-v="both">혼합</div>
     </div>
   </div>
-  <div class="panel"><h2>② 범위 (가이드 일차, 여러 개 선택)</h2>
+  <div class="panel"><h2>③ 범위 (가이드 일차, 여러 개 선택)</h2>
     <div class="opts" id="dayOpts">
       <div class="opt sel" data-v="1">1일차</div>
       <div class="opt" data-v="2">2일차</div>
       <div class="opt" data-v="3">3일차</div>
       <div class="opt" data-v="4">4일차</div>
       <div class="opt" data-v="5">5일차</div>
-      <div class="opt" data-v="6">6일차(탁음)</div>
-      <div class="opt" data-v="7">7일차(요음)</div>
+      <div class="opt" data-v="6">6일차</div>
+      <div class="opt" data-v="7">7일차</div>
     </div>
   </div>
-  <div class="panel"><h2>③ 난이도</h2>
+  <div class="panel"><h2>④ 난이도</h2>
     <div class="opts" id="modeOpts">
-      <div class="opt sel" data-v="easy">🔊소리+한글 발음</div>
-      <div class="opt" data-v="mid">🔊소리+로마자</div>
+      <div class="opt sel" data-v="easy">🔊소리+발음+뜻</div>
+      <div class="opt" data-v="mid">🔊소리+뜻만</div>
       <div class="opt" data-v="hard">🔊소리만 (고수)</div>
     </div>
     <div style="height:10px"></div>
     <div class="opts" id="sizeOpts">
       <div class="opt" data-v="6">카드 6장</div>
-      <div class="opt sel" data-v="9">카드 9장</div>
-      <div class="opt" data-v="12">카드 12장</div>
+      <div class="opt sel" data-v="9">9장</div>
+      <div class="opt" data-v="12">12장</div>
+      <div class="opt" data-v="16">16장</div>
+      <div class="opt" data-v="20">20장</div>
+    </div>
+    <div style="height:10px"></div>
+    <div class="opts" id="roundOpts">
+      <div class="opt" data-v="5">5문제</div>
+      <div class="opt sel" data-v="10">10문제</div>
+      <div class="opt" data-v="15">15문제</div>
+      <div class="opt" data-v="20">20문제</div>
+      <div class="opt" data-v="all">전부</div>
     </div>
   </div>
   <button class="startbtn" onclick="startGame()">게임 시작 ▶</button>
-  <div class="note">💡 소리가 안 나면 기기에 일본어 TTS 음성이 없는 것 — 발음 표시 모드로 연습하세요. 폰에서도 이 파일을 열면 똑같이 작동합니다.</div>
+  <div class="note">💡 문제 수가 범위 안의 글자/단어 수보다 많으면 자동으로 줄어듭니다. 소리가 안 나면 기기에 일본어 TTS 음성이 없는 것 — 발음 표시 모드로 연습하세요.</div>
 </div>
 
 <div id="game">
@@ -114,30 +131,23 @@
 </div>
 
 <script>
-// ---------- 데이터 (가이드 일차와 동일한 구성) ----------
+// ---------- 글자 데이터 [표기, 로마자, 한글발음, 일차] ----------
 const HIRA = [
- // day1
  ["あ","a","아",1],["い","i","이",1],["う","u","우",1],["え","e","에",1],["お","o","오",1],
- // day2
  ["か","ka","카",2],["き","ki","키",2],["く","ku","쿠",2],["け","ke","케",2],["こ","ko","코",2],
  ["さ","sa","사",2],["し","shi","시",2],["す","su","스",2],["せ","se","세",2],["そ","so","소",2],
- // day3
  ["た","ta","타",3],["ち","chi","치",3],["つ","tsu","츠",3],["て","te","테",3],["と","to","토",3],
  ["な","na","나",3],["に","ni","니",3],["ぬ","nu","누",3],["ね","ne","네",3],["の","no","노",3],
- // day4
  ["は","ha","하",4],["ひ","hi","히",4],["ふ","fu","후",4],["へ","he","헤",4],["ほ","ho","호",4],
  ["ま","ma","마",4],["み","mi","미",4],["む","mu","무",4],["め","me","메",4],["も","mo","모",4],
- // day5
  ["や","ya","야",5],["ゆ","yu","유",5],["よ","yo","요",5],
  ["ら","ra","라",5],["り","ri","리",5],["る","ru","루",5],["れ","re","레",5],["ろ","ro","로",5],
- // day6
  ["わ","wa","와",6],["を","wo","오",6],["ん","n","응",6],
  ["が","ga","가",6],["ぎ","gi","기",6],["ぐ","gu","구",6],["げ","ge","게",6],["ご","go","고",6],
  ["ざ","za","자",6],["じ","ji","지",6],["ず","zu","즈",6],["ぜ","ze","제",6],["ぞ","zo","조",6],
  ["だ","da","다",6],["で","de","데",6],["ど","do","도",6],
  ["ば","ba","바",6],["び","bi","비",6],["ぶ","bu","부",6],["べ","be","베",6],["ぼ","bo","보",6],
  ["ぱ","pa","파",6],["ぴ","pi","피",6],["ぷ","pu","푸",6],["ぺ","pe","페",6],["ぽ","po","포",6],
- // day7 (요음)
  ["きゃ","kya","캬",7],["きゅ","kyu","큐",7],["きょ","kyo","쿄",7],
  ["しゃ","sha","샤",7],["しゅ","shu","슈",7],["しょ","sho","쇼",7],
  ["ちゃ","cha","챠",7],["ちゅ","chu","츄",7],["ちょ","cho","쵸",7],
@@ -167,13 +177,61 @@ const KATA = [
  ["リャ","rya","랴",7],["リュ","ryu","류",7],["リョ","ryo","료",7]
 ];
 
+// ---------- 단어 데이터 [표기, 한글발음, 뜻, 일차] — 가이드 연습 단어와 동일 ----------
+const HIRA_W = [
+ ["あい","아이","사랑",1],["あお","아오","파랑",1],["いえ","이에","집",1],["うえ","우에","위",1],
+ ["おい","오이","조카",1],["あう","아우","만나다",1],["いう","이우","말하다",1],["うお","우오","물고기",1],
+ ["おう","오우","왕",1],["えい","에이","가오리",1],["いい","이이","좋다",1],
+ ["かさ","카사","우산",2],["かお","카오","얼굴",2],["かき","카키","감",2],["きく","키쿠","듣다",2],
+ ["こえ","코에","목소리",2],["さけ","사케","술",2],["すし","스시","초밥",2],["せかい","세카이","세계",2],
+ ["そこ","소코","거기",2],["あさ","아사","아침",2],["えき","에키","역",2],["しか","시카","사슴",2],
+ ["たこ","타코","문어",3],["たて","타테","세로",3],["ちかい","치카이","가깝다",3],["つくえ","츠쿠에","책상",3],
+ ["とけい","토케이","시계",3],["なつ","나츠","여름",3],["なに","나니","무엇",3],["にく","니쿠","고기",3],
+ ["ねこ","네코","고양이",3],["いぬ","이누","개",3],["きのこ","키노코","버섯",3],["した","시타","아래",3],
+ ["はな","하나","꽃",4],["はは","하하","엄마",4],["ひと","히토","사람",4],["ふね","후네","배",4],
+ ["へた","헤타","서투름",4],["ほし","호시","별",4],["まめ","마메","콩",4],["みみ","미미","귀",4],
+ ["むし","무시","벌레",4],["もも","모모","복숭아",4],["なまえ","나마에","이름",4],["まち","마치","마을",4],
+ ["やま","야마","산",5],["ゆき","유키","눈(snow)",5],["よる","요루","밤",5],["さくら","사쿠라","벚꽃",5],
+ ["とり","토리","새",5],["くるま","쿠루마","자동차",5],["しろ","시로","흰색",5],["りす","리스","다람쥐",5],
+ ["ゆめ","유메","꿈",5],["やさい","야사이","채소",5],["はやい","하야이","빠르다",5],["そら","소라","하늘",5],
+ ["わたし","와타시","나",6],["でんわ","뎅와","전화",6],["ほん","홍","책",6],["みかん","미캉","귤",6],
+ ["かばん","카방","가방",6],["ぱん","팡","빵",6],["みず","미즈","물",6],["かぞく","카조쿠","가족",6],
+ ["げんき","겡키","활기참",6],["ぶた","부타","돼지",6],["だいがく","다이가쿠","대학",6],["ともだち","토모다치","친구",6],
+ ["きょう","쿄오","오늘",7],["きって","킷테","우표",7],["がっこう","각코오","학교",7],["しゃしん","샤신","사진",7],
+ ["でんしゃ","덴샤","전철",7],["りょうり","료오리","요리",7],["じてんしゃ","지텐샤","자전거",7],["しゅくだい","슈쿠다이","숙제",7],
+ ["びょういん","뵤오인","병원",7],["せんせい","센세이","선생님",7],["こうえん","코오엔","공원",7],["ぎゅうにゅう","규우뉴우","우유",7]
+];
+const KATA_W = [
+ ["アイス","아이스","아이스크림",1],["アニメ","아니메","애니메이션",1],["アイドル","아이도루","아이돌",1],["イメージ","이메지","이미지",1],
+ ["エアコン","에아콘","에어컨",1],["エコ","에코","에코",1],["ウイルス","우이루스","바이러스",1],["ウール","우우루","울(양모)",1],
+ ["オイル","오이루","오일",1],["オレンジ","오렌지","오렌지",1],["オーケー","오오케에","OK",1],["エンド","엔도","엔드(끝)",1],
+ ["カメラ","카메라","카메라",2],["カード","카아도","카드",2],["ケーキ","케에키","케이크",2],["コーラ","코오라","콜라",2],
+ ["クイズ","쿠이즈","퀴즈",2],["キス","키스","키스",2],["サイズ","사이즈","사이즈",2],["スキー","스키이","스키",2],
+ ["セット","셋토","세트",2],["サッカー","삿카아","축구",2],["ケース","케에스","케이스",2],["コスト","코스토","비용",2],
+ ["タクシー","타쿠시이","택시",3],["テスト","테스토","시험",3],["トマト","토마토","토마토",3],["チーズ","치이즈","치즈",3],
+ ["ツアー","츠아아","투어",3],["ナイフ","나이후","나이프",3],["ニュース","뉴우스","뉴스",3],["ネクタイ","네쿠타이","넥타이",3],
+ ["ノート","노오토","노트",3],["テニス","테니스","테니스",3],["データ","데에타","데이터",3],["トースト","토오스토","토스트",3],
+ ["ハム","하무","햄",4],["ヒーター","히이타아","히터",4],["ヘア","헤아","헤어",4],["ホテル","호테루","호텔",4],
+ ["マスク","마스쿠","마스크",4],["ミルク","미루쿠","우유",4],["メモ","메모","메모",4],["モデル","모데루","모델",4],
+ ["ママ","마마","엄마",4],["ハート","하아토","하트",4],["ホーム","호오무","홈",4],["メーカー","메에카아","메이커",4],
+ ["ラジオ","라지오","라디오",5],["リズム","리즈무","리듬",5],["ルール","루우루","규칙",5],["レモン","레몬","레몬",5],
+ ["ロボット","로봇토","로봇",5],["ライト","라이토","빛/조명",5],["メロディー","메로디이","멜로디",5],["リボン","리본","리본",5],
+ ["ヨガ","요가","요가",5],["ユーモア","유우모아","유머",5],["ライブ","라이부","라이브 공연",5],["ロック","롯쿠","록(음악)",5],
+ ["ワイン","와인","와인",6],["ワンピース","완피이스","원피스",6],["ペン","펜","펜",6],["パン","팡","빵",6],
+ ["ゲーム","게에무","게임",6],["ピザ","피자","피자",6],["ビール","비이루","맥주",6],["バナナ","바나나","바나나",6],
+ ["ガラス","가라스","유리",6],["ドア","도아","문",6],["ジュース","쥬우스","주스",6],["ボタン","보탄","버튼",6],
+ ["コンサート","콘사아토","콘서트",7],["ストーリー","스토오리이","스토리",7],["ダンス","단스","댄스",7],["ファン","환","팬",7],
+ ["ステージ","스테에지","무대",7],["マイク","마이쿠","마이크",7],["シングル","싱구루","싱글(곡)",7],["アルバム","아루바무","앨범",7],
+ ["カラオケ","카라오케","노래방",7],["バンド","반도","밴드",7],["ギター","기타아","기타",7],["ポップス","폽푸스","팝 음악",7]
+];
+
 // ---------- 설정 UI ----------
 function bindOpts(id, multi){
   const wrap = document.getElementById(id);
   wrap.querySelectorAll('.opt').forEach(o=>{
     o.onclick = ()=>{
       if(multi){ o.classList.toggle('sel');
-        if(!wrap.querySelector('.sel')) o.classList.add('sel'); // 최소 1개
+        if(!wrap.querySelector('.sel')) o.classList.add('sel');
       } else {
         wrap.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
         o.classList.add('sel');
@@ -181,8 +239,8 @@ function bindOpts(id, multi){
     };
   });
 }
-bindOpts('scriptOpts',false); bindOpts('dayOpts',true);
-bindOpts('modeOpts',false); bindOpts('sizeOpts',false);
+bindOpts('kindOpts',false); bindOpts('scriptOpts',false); bindOpts('dayOpts',true);
+bindOpts('modeOpts',false); bindOpts('sizeOpts',false); bindOpts('roundOpts',false);
 const getSel = id => [...document.querySelectorAll('#'+id+' .sel')].map(o=>o.dataset.v);
 
 // ---------- TTS ----------
@@ -204,25 +262,32 @@ function speak(text){
 
 // ---------- 게임 ----------
 let pool=[], targets=[], cur=0, totalRounds=10, misses=0, target=null;
-let t0=0, timerId=null, boardCards=[], mode='easy', settingsKey='';
+let t0=0, timerId=null, boardCards=[], mode='easy', kind='char', settingsKey='';
 
 const shuffle = a => { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; };
 
 function startGame(){
+  kind = getSel('kindOpts')[0];
   const script = getSel('scriptOpts')[0];
   const days = getSel('dayOpts').map(Number);
   mode = getSel('modeOpts')[0];
   const size = Number(getSel('sizeOpts')[0]);
+  const roundSel = getSel('roundOpts')[0];
 
-  let src = script==='hira'?HIRA: script==='kata'?KATA: HIRA.concat(KATA);
-  pool = src.filter(x=>days.includes(x[3]));
-  if(pool.length < 4){ alert('선택한 범위의 글자가 너무 적어요. 일차를 더 선택해 주세요!'); return; }
+  let src;
+  if(kind==='char') src = script==='hira'?HIRA: script==='kata'?KATA: HIRA.concat(KATA);
+  else src = script==='hira'?HIRA_W: script==='kata'?KATA_W: HIRA_W.concat(KATA_W);
+
+  // 일차 필터 + 표기 중복 제거
+  const seen = new Set();
+  pool = src.filter(x=>days.includes(x[3]) && !seen.has(x[0]) && seen.add(x[0]));
+  if(pool.length < 4){ alert('선택한 범위가 너무 좁아요. 일차를 더 선택해 주세요!'); return; }
 
   const boardSize = Math.min(size, pool.length);
-  totalRounds = Math.min(10, pool.length);
+  totalRounds = roundSel==='all' ? pool.length : Math.min(Number(roundSel), pool.length);
   targets = shuffle([...pool]).slice(0, totalRounds);
   cur=0; misses=0;
-  settingsKey = 'karuta_'+script+'_'+days.join('')+'_'+mode+'_'+boardSize;
+  settingsKey = ['karuta',kind,script,days.join(''),mode,boardSize,totalRounds].join('_');
 
   document.getElementById('setup').style.display='none';
   document.getElementById('result').style.display='none';
@@ -230,12 +295,15 @@ function startGame(){
   document.getElementById('total').textContent = totalRounds;
   document.getElementById('miss').textContent = 0;
 
-  // 보드 구성: 타깃들 + 채우기
+  // 보드 구성: 타깃 우선 배치 + 나머지로 채움
   const others = shuffle(pool.filter(x=>!targets.includes(x)));
-  boardCards = shuffle(targets.concat(others).slice(0, boardSize));
-  // 타깃이 보드에 모두 없으면 안되므로: 보드에 없는 타깃은 라운드마다 카드 교체로 처리
+  boardCards = shuffle(targets.slice(0, boardSize).concat(others).slice(0, boardSize));
+
   const board = document.getElementById('board');
-  board.style.gridTemplateColumns = 'repeat('+(boardSize<=6?3: boardSize<=9?3:4)+',1fr)';
+  const cols = kind==='word' ? (boardSize<=6?2: boardSize<=12?3:4)
+                             : (boardSize<=9?3: boardSize<=16?4:5);
+  board.style.gridTemplateColumns = 'repeat('+cols+',1fr)';
+  board.className = 'board' + (kind==='word'?' words':'') + (boardSize>=16 && kind==='char'?' small':'');
   board.innerHTML='';
   boardCards.forEach((c,i)=>{
     const d=document.createElement('div');
@@ -253,9 +321,9 @@ function startGame(){
 function nextRound(){
   if(cur>=totalRounds){ return endGame(); }
   target = targets[cur];
-  // 타깃이 보드에 없으면, 이미 맞힌(gone) 카드 하나를 타깃으로 교체
+  // 타깃이 보드에 없으면, 이미 맞힌 카드 하나를 타깃으로 교체
   if(!boardCards.includes(target)){
-    const goneEl=[...document.querySelectorAll('.kcard.right')][0] || [...document.querySelectorAll('.kcard')][0];
+    const goneEl=document.querySelector('.kcard.right') || document.querySelector('.kcard');
     const idx=Number(goneEl.dataset.i);
     boardCards[idx]=target;
     goneEl.textContent=target[0];
@@ -264,9 +332,15 @@ function nextRound(){
   }
   document.getElementById('round').textContent=cur+1;
   const pt=document.getElementById('promptText'), ps=document.getElementById('promptSub');
-  if(mode==='easy'){ pt.textContent=target[2]; ps.textContent=target[1]; }
-  else if(mode==='mid'){ pt.textContent=target[1]; ps.textContent='로마자를 보고 찾으세요'; }
-  else { pt.textContent='🔊'; ps.textContent='소리만 듣고 찾으세요'; }
+  if(kind==='char'){
+    if(mode==='easy'){ pt.textContent=target[2]; ps.textContent=target[1]; }
+    else if(mode==='mid'){ pt.textContent=target[1]; ps.textContent='로마자를 보고 찾으세요'; }
+    else { pt.textContent='🔊'; ps.textContent='소리만 듣고 찾으세요'; }
+  } else {
+    if(mode==='easy'){ pt.textContent=target[1]; ps.textContent='뜻: '+target[2]; }
+    else if(mode==='mid'){ pt.textContent=target[2]; ps.textContent='뜻을 보고 단어를 찾으세요'; }
+    else { pt.textContent='🔊'; ps.textContent='소리만 듣고 찾으세요'; }
+  }
   speak(target[0]);
 }
 function speakTarget(){ if(target) speak(target[0]); }
@@ -290,7 +364,7 @@ function endGame(){
   document.getElementById('game').style.display='none';
   document.getElementById('result').style.display='block';
   document.getElementById('resTime').textContent=sec.toFixed(1)+'초';
-  document.getElementById('resAcc').textContent='정확도 '+acc+'% (실수 '+misses+'회)';
+  document.getElementById('resAcc').textContent='정확도 '+acc+'% (실수 '+misses+'회) · '+totalRounds+'문제';
   let bestMsg='';
   try{
     const prev=Number(localStorage.getItem(settingsKey));

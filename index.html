@@ -58,9 +58,10 @@
     <div class="opts" id="kindOpts">
       <div class="opt sel" data-v="char">글자 카루타</div>
       <div class="opt" data-v="word">단어 카루타 (가나)</div>
+      <div class="opt" data-v="lesson">레슨 단어</div>
       <div class="opt" data-v="travel">여행 단어 (한자)</div>
     </div>
-    <div class="note" style="margin:8px 0 0">단어 카루타는 소리를 듣고 <b>뜻(위) + 가나(아래)</b>를 둘 다 고르는 방식이에요.</div>
+    <div class="note" style="margin:8px 0 0">단어·레슨 카루타는 소리를 듣고 <b>뜻(위) + 가나(아래)</b>를 둘 다 고르는 방식이에요.</div>
   </div>
   <div class="panel"><h2>② 글자 종류</h2>
     <div class="opts" id="scriptOpts">
@@ -70,15 +71,18 @@
     </div>
   </div>
   <div class="panel"><h2>③ 범위 (여러 개 선택)</h2>
-    <div class="note" style="margin:0 0 8px">글자·단어 카루타는 가이드 일차, 여행 단어는 세션 번호(1~3)와 같아요.</div>
+    <div class="note" style="margin:0 0 8px">글자·단어는 가이드 일차(1~7), 레슨 단어는 레슨(1~10), 여행 단어는 세션(1~3)과 같아요.</div>
     <div class="opts" id="dayOpts">
-      <div class="opt sel" data-v="1">1일차</div>
-      <div class="opt" data-v="2">2일차</div>
-      <div class="opt" data-v="3">3일차</div>
-      <div class="opt" data-v="4">4일차</div>
-      <div class="opt" data-v="5">5일차</div>
-      <div class="opt" data-v="6">6일차</div>
-      <div class="opt" data-v="7">7일차</div>
+      <div class="opt sel" data-v="1">1</div>
+      <div class="opt" data-v="2">2</div>
+      <div class="opt" data-v="3">3</div>
+      <div class="opt" data-v="4">4</div>
+      <div class="opt" data-v="5">5</div>
+      <div class="opt" data-v="6">6</div>
+      <div class="opt" data-v="7">7</div>
+      <div class="opt" data-v="8">8</div>
+      <div class="opt" data-v="9">9</div>
+      <div class="opt" data-v="10">10</div>
     </div>
   </div>
   <div class="panel"><h2>④ 난이도</h2>
@@ -250,6 +254,33 @@ const TRAVEL = [
  ["カード","カード","카아도","카드",3],["袋","ふくろ","후쿠로","봉투",3],["全部","ぜんぶ","젠부","전부",3]
 ];
 
+// ---------- 레슨 단어 데이터 [가나, 한글발음, 뜻, 레슨] — 통합 단어장과 동일 ----------
+const LESSON = [
+ ["わたし","와타시","나",1],["です","데스","~입니다",1],["かんこく","캉코쿠","한국",1],["かんこくじん","캉코쿠진","한국인",1],
+ ["がくせい","가쿠세이","학생",1],["ほん","혼","책",1],["これ","코레","이것",1],["えがお","에가오","미소",1],
+ ["おはようございます","오하요-고자이마스","좋은 아침",1],["こんにちは","콘니치와","안녕하세요(낮)",1],["こんばんは","콤방와","안녕하세요(저녁)",1],
+ ["ありがとうございます","아리가토-고자이마스","감사합니다",1],["すみません","스미마셍","실례/미안합니다",1],["はじめまして","하지메마시테","처음 뵙겠습니다",1],
+ ["それ","소레","그것",2],["あれ","아레","저것",2],["どれ","도레","어느 것",2],["かばん","카방","가방",2],
+ ["ひと","히토","사람",2],["せんせい","센세이","선생님",2],["にほんご","니홍고","일본어",2],["の","노","~의(조사)",2],["だれ","다레","누구",2],
+ ["たべます","타베마스","먹습니다",3],["のみます","노미마스","마십니다",3],["いきます","이키마스","갑니다",3],["みます","미마스","봅니다",3],
+ ["ききます","키키마스","듣습니다",3],["します","시마스","합니다",3],["ごはん","고항","밥",3],["みず","미즈","물",3],
+ ["おんがく","옹가쿠","음악",3],["すし","스시","초밥",3],["なに","나니","무엇",3],["を","오","~을/를(조사)",3],
+ ["たのしい","타노시이","즐겁다",4],["おいしい","오이시이","맛있다",4],["たかい","타카이","비싸다/높다",4],["かわいい","카와이이","귀엽다",4],
+ ["いい","이이","좋다",4],["すき","스키","좋아함",4],["きれい","키레이","예쁜/깨끗한",4],["げんき","겡키","활기참",4],
+ ["ゆうめい","유우메이","유명한",4],["きょく","쿄쿠","곡",4],["どんな","돈나","어떤",4],
+ ["いきたい","이키타이","가고 싶다",5],["たべたい","타베타이","먹고 싶다",5],["ききたい","키키타이","듣고 싶다",5],["みたい","미타이","보고 싶다",5],
+ ["にほん","니혼","일본",5],["ライブ","라이부","라이브 공연",5],
+ ["まつ","마츠","기다리다",6],["ちょっと","촛토","잠깐",6],["ともだち","토모다치","친구",6],
+ ["あります","아리마스","있다(사물)",7],["います","이마스","있다(생물)",7],["うえ","우에","위",7],["した","시타","아래",7],
+ ["なか","나카","안",7],["まえ","마에","앞",7],["うしろ","우시로","뒤",7],["となり","토나리","옆",7],
+ ["みぎ","미기","오른쪽",7],["ひだり","히다리","왼쪽",7],["トイレ","토이레","화장실",7],["どこ","도코","어디",7],
+ ["ひとつ","히토츠","한 개",8],["ふたつ","후타츠","두 개",8],["ひとり","히토리","한 명",8],["いま","이마","지금",8],
+ ["なんじ","난지","몇 시",8],["ビール","비이루","맥주",8],
+ ["でした","데시타","~였습니다",9],["かった","캇타","~었다(과거)",9],["りょこう","료코오","여행",9],["どう","도오","어떻게",9],
+ ["ましょう","마쇼","~합시다",10],["ませんか","마셍카","~하지 않을래요?",10],["から","카라","~니까(이유)",10],["と","토","~와(함께)",10],
+ ["いっしょに","잇쇼니","같이",10],["つかれる","츠카레루","피곤하다",10],["やすむ","야스무","쉬다",10]
+];
+
 // ---------- 설정 UI ----------
 function bindOpts(id, multi){
   const wrap = document.getElementById(id);
@@ -314,6 +345,7 @@ function startGame(){
   let src;
   if(kind==='char') src = script==='hira'?HIRA: script==='kata'?KATA: HIRA.concat(KATA);
   else if(kind==='word') src = script==='hira'?HIRA_W: script==='kata'?KATA_W: HIRA_W.concat(KATA_W);
+  else if(kind==='lesson') src = LESSON;
   else src = TRAVEL;
 
   const lv = (kind==='travel') ? 4 : 3;
@@ -340,9 +372,9 @@ function startGame(){
   const board = document.getElementById('board');
   const sectTop = document.getElementById('sectTop');
   const botLabel = document.getElementById('botLabel');
-  const wordy = (kind==='word' || kind==='travel');
+  const wordy = (kind==='word' || kind==='lesson' || kind==='travel');
 
-  if(kind==='word'){
+  if(kind==='word' || kind==='lesson'){
     sectTop.style.display='block'; botLabel.style.display='block';
     board.className='board words';
     document.getElementById('boardTop').className='board words';
@@ -367,7 +399,7 @@ function nextRound(){
   document.getElementById('round').textContent=cur+1;
   const pt=document.getElementById('promptText'), ps=document.getElementById('promptSub');
 
-  if(kind==='word'){
+  if(kind==='word' || kind==='lesson'){
     if(!boardCards.includes(target)) boardCards[0]=target;   // 타깃이 빠졌으면 교체
     const cols = colsFor(boardCards.length, true);
     buildBoard(document.getElementById('boardTop'), shuffle([...boardCards]), c=>c[2], tapMeaning, cols); // 뜻
